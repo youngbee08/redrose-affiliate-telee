@@ -5,7 +5,7 @@ import { HiOutlineArrowLeft } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import type { PendingOrder } from "../lib/interfaces";
 
-const WHATSAPP_NUMBER = "2348140041861";
+const WHATSAPP_NUMBER = "2348167949381";
 
 const naira = (n: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(

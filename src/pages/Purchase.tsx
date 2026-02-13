@@ -5,7 +5,7 @@ import product from "../lib/productDetails";
 import type { PendingOrder } from "../lib/interfaces";
 import { useNavigate } from "react-router-dom";
 
-const WHATSAPP_NUMBER = "2348140041861";
+const WHATSAPP_NUMBER = "2348167949381";
 
 const BANK_DETAILS = {
   bankName: "UBA",

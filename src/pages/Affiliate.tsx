@@ -89,10 +89,10 @@ const Affiliate: React.FC = () => {
           <div className="w-fit">
             <Link
               to={
-                "https://www.affluenceglobaldream.com/en/gladys99/ng/agl/ref-member/LEFT"
+                "https://www.affluenceglobaldream.com/en/barmytee_83/ng/agl/ref-member/LEFT"
               }
               target="_blank"
-              className="flex items-center gap-2 bg-primary text-white font-semibold text-sm rounded-lg px-3 py-2 cursor-pointer"
+              className="flex items-center gap-2 bg-primary text-white font-semibold text-sm rounded-full px-3 py-2 cursor-pointer"
             >
               <MdGroupAdd size={15} />
               Join the Network{" "}
@@ -132,7 +132,7 @@ const Affiliate: React.FC = () => {
             description="Position yourself in the primary spillover leg for maximum team momentum."
             cta="Join Left Leg"
             href={
-              "https://www.affluenceglobaldream.com/en/gladys99/ng/agl/ref-member/LEFT"
+              "https://www.affluenceglobaldream.com/en/barmytee_83/ng/agl/ref-member/LEFT"
             }
           />
 
@@ -142,7 +142,7 @@ const Affiliate: React.FC = () => {
             description="Ideal for balanced team building and maximizing personal bonus overrides."
             cta="Join Right Leg"
             href={
-              "https://www.affluenceglobaldream.com/en/gladys99/ng/agl/ref-member/RIGHT"
+              "https://www.affluenceglobaldream.com/en/barmytee_83/ng/agl/ref-member/RIGHT"
             }
           />
         </div>
@@ -188,7 +188,7 @@ const Affiliate: React.FC = () => {
               <a
                 href={assets.regPackages}
                 download
-                className="inline-flex w-full md:w-fit items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white shadow-md shadow-black/10 hover:brightness-110 transition"
+                className="inline-flex w-full md:w-fit items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-white shadow-md shadow-black/10 hover:brightness-110 transition"
               >
                 <FaDownload />
                 Download Package Details (PDF)

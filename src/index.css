@@ -1,16 +1,21 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Inter:wght@400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&family=Space+Grotesk:wght@500..700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #e7000b;
-  --color-primary-deep: #b80009;
-  --color-accent: #ff3b30;
+  --color-primary: #d1000a;
+  --color-primary-deep: #a80008;
+  --color-accent: #ff2d2d;
+
   --color-secondary: #ffffff;
+  --color-secondary-soft: #f9fafb;
+
   --color-tetiary: #0b0e13;
-  --color-neutral-dark: #111827;
-  --color-neutral-soft: #6b7280;
-  --color-secondary-dark: #e5e7eb;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --color-neutral-dark: #101827;
+  --color-neutral-soft: #4b5563;
+
+  --color-secondary-dark: #e6e8ec;
+
+  --font-sans: "Manrope", system-ui, sans-serif;
   --font-display: "Space Grotesk", system-ui, sans-serif;
 }
 
@@ -21,6 +26,13 @@
 * {
   font-family: var(--font-sans);
   font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--color-secondary);
+  color: var(--color-tetiary);
 }
 
 h1,
@@ -28,7 +40,17 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
+}
+
+p {
+  line-height: 1.7;
+}
+
+input,
+textarea,
+button {
+  font-family: var(--font-sans);
 }
 
 html {
@@ -49,7 +71,7 @@ html {
 }
 
 .styled-scrollbar::-webkit-scrollbar-thumb {
-  background-color: color-mix(in oklab, var(--color-primary) 55%, transparent);
+  background-color: color-mix(in oklab, var(--color-primary) 50%, transparent);
   border-radius: 9999px;
   transition: background-color 0.2s ease;
 }
@@ -60,7 +82,7 @@ html {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklab, var(--color-primary) 55%, transparent)
+  scrollbar-color: color-mix(in oklab, var(--color-primary) 50%, transparent)
     transparent;
 }
 

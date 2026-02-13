@@ -286,7 +286,7 @@ const Home: React.FC = () => {
               </p>
             </div>
             <div className="flex items-center gap-4 w-full lg:justify-between">
-              <div className="bg-neutral-soft/10 border border-neutral-soft/10 rounded-lg flex items-center gap-3 px-3 py-2 lg:w-[35%]  justify-between">
+              <div className="bg-neutral-soft/10 border border-neutral-soft/10 rounded-full flex items-center gap-3 px-3 py-2 lg:w-[35%]  justify-between">
                 <button
                   className="text-neutral-dark text-sm font-semibold cursor-pointer"
                   onClick={() => manageProductQuantity("deduct")}
@@ -306,7 +306,7 @@ const Home: React.FC = () => {
               <div className="">
                 <button
                   onClick={() => navigate("/purchase-product")}
-                  className="flex items-center gap-2 bg-primary text-white font-semibold text-sm rounded-lg px-3 py-2 cursor-pointer"
+                  className="flex items-center gap-2 bg-primary text-white font-semibold text-sm rounded-full px-3 py-2 cursor-pointer"
                 >
                   <FaCartShopping size={15} />
                   Buy Now

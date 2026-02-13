@@ -38,7 +38,7 @@ const LegCard: React.FC<LegCardProps> = ({
           <Link
             to={href}
             target="_blank"
-            className="inline-flex w-full items-center justify-center rounded-xl border border-primary bg-white px-4 py-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
+            className="inline-flex w-full items-center justify-center rounded-full border border-primary px-4 py-3 text-sm font-bold  transition bg-primary text-white"
           >
             {cta}
           </Link>
@@ -46,7 +46,7 @@ const LegCard: React.FC<LegCardProps> = ({
           <button
             type="button"
             onClick={onClick}
-            className="inline-flex w-full items-center justify-center rounded-xl border border-primary bg-white px-4 py-3 text-sm font-bold text-primary transition hover:bg-primary hover:text-white"
+            className="inline-flex w-full items-center justify-center rounded-full border border-primary px-4 py-3 text-sm font-bold  transition bg-primary text-white"
           >
             {cta}
           </button>

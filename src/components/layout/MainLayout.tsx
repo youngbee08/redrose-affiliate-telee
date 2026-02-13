@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { mainLayoutProps } from "../../lib/interfaces";
 import Footer from "../ui/Footer";
 import Header from "../ui/Header";
@@ -8,6 +8,9 @@ import { useLocation } from "react-router-dom";
 
 const MainLayout: React.FC<mainLayoutProps> = ({ children }) => {
   const location = useLocation();
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: "smooth" });
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-secondary/30 text-tetiary">
