@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.doubleredrose-gladys.info/sitemap.xml
+Sitemap: https://www.doubleredrose-telee.info/sitemap.xml
