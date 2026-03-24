@@ -225,49 +225,49 @@ const PurchasePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-primary/40 bg-primary/5 p-4">
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-sm font-bold text-tetiary">
+          <div className="mt-6 rounded-2xl border border-primary/40 bg-primary/5 p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+              <p className="text-sm sm:text-base font-bold text-tetiary">
                 Bank Transfer Details
               </p>
             </div>
 
-            <div className="mt-4 rounded-xl border border-primary/40 bg-white p-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="mt-4 rounded-xl border border-primary/40 bg-white p-3 sm:p-4 md:p-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <p className="text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
+                  <p className="text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
                     Bank name
                   </p>
-                  <p className="mt-1 text-sm font-bold text-tetiary">
+                  <p className="mt-1 text-sm sm:text-base font-bold text-tetiary break-words">
                     {BANK_DETAILS.bankName}
                   </p>
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
+                  <p className="text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
                     Branch
                   </p>
-                  <p className="mt-1 text-sm font-bold text-tetiary">
+                  <p className="mt-1 text-sm sm:text-base font-bold text-tetiary uppercase break-words">
                     {BANK_DETAILS.branch}
                   </p>
                 </div>
               </div>
 
               <div className="mt-4">
-                <p className="text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
+                <p className="text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
                   Account name
                 </p>
-                <p className="mt-1 text-sm font-bold text-tetiary">
+                <p className="mt-1 text-sm sm:text-base font-bold text-tetiary break-words">
                   {BANK_DETAILS.accountName}
                 </p>
               </div>
 
-              <div className="mt-4 flex items-end justify-between gap-3 rounded-xl border border-secondary-dark/70 bg-secondary/20 p-4">
+              <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-secondary-dark/70 bg-secondary/20 p-3 sm:p-4">
                 <div>
-                  <p className="text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
-                    {currency === "NGN" ? "Account number" : "Zelle Email"}
+                  <p className="text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
+                    {currency === "USD" ? "Zelle Email" : "Account Number"}
                   </p>
-                  <p className="mt-1 text-lg font-extrabold text-tetiary tracking-wide">
+                  <p className="mt-1 text-base sm:text-lg font-extrabold text-tetiary tracking-wide break-all">
                     {BANK_DETAILS.accountNumber}
                   </p>
                 </div>
@@ -275,14 +275,14 @@ const PurchasePage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleCopyAccountNumber}
-                  className="shrink-0 inline-flex items-center justify-center gap-2 rounded-xl border border-secondary-dark/70 bg-white px-4 py-2 text-xs font-bold text-tetiary hover:bg-secondary/30 transition"
+                  className="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 rounded-xl border border-secondary-dark/70 bg-white px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold text-tetiary hover:bg-secondary/30 transition"
                 >
-                  <HiOutlineClipboardCopy className="hidden lg:flex text-lg" />
+                  <HiOutlineClipboardCopy className="hidden sm:flex text-base sm:text-lg" />
                   Copy
                 </button>
               </div>
 
-              <p className="mt-4 text-xs text-neutral-soft">
+              <p className="mt-4 text-[11px] sm:text-xs text-neutral-soft">
                 Please include your name in the transfer description.
               </p>
             </div>
