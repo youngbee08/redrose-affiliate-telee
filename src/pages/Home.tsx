@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import assets from "../assets/assets";
 import {
   FaArrowRight,
@@ -10,7 +10,11 @@ import {
 import { FaCartShopping, FaUserDoctor } from "react-icons/fa6";
 import product from "../lib/productDetails";
 import { useNavigate } from "react-router-dom";
-import { convertNairaToDollar } from "../utilities/formatterUtility";
+import {
+  formatPayAmountFromNaira,
+  getAltPrice,
+  useCurrencyPreference,
+} from "../utilities/formatterUtility";
 import type {
   BenefitCardProps,
   HowItWorksCardProps,
@@ -26,6 +30,9 @@ import IngredientCard from "../components/common/IngredientsCard";
 import HowToUseCard from "../components/common/HowToUseCard";
 import WhyChooseCard from "../components/common/WhyChooseCard";
 import FaqCard from "../components/common/FaqCard";
+import CurrencyToggle from "../components/ui/CurrencyToggle";
+import IngredientModal from "../components/Modals/IngredientModal";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const Home: React.FC = () => {
   const savedCount = sessionStorage.getItem("productCount");
@@ -33,7 +40,51 @@ const Home: React.FC = () => {
     savedCount ? +savedCount : 1,
   );
   const navigate = useNavigate();
-  const [showUSD, setShowUSD] = useState(false);
+  const { currency, setCurrency } = useCurrencyPreference();
+  const packageScrollRef = useRef<HTMLDivElement | null>(null);
+  const [ingredientModal, setIngredientModal] =
+    useState<IngredientCardProps | null>(null);
+  const [visibleIngredients, setVisibleIngredients] = useState(3);
+  const isMobile =
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 767px)").matches
+      : false;
+
+  const dollarPricing = [
+    { name: "Associate", count: 1, price: 65 },
+    { name: "Promoter", count: 3, price: 195 },
+    { name: "Business Builder", count: 15, price: 600, discount: 975 },
+    { name: "Business Owner", count: 30, price: 1200, discount: 1950 },
+  ];
+
+  const nairaPricing = [
+    { name: "Associate", count: 1, price: 73600 },
+    { name: "Promoter", count: 3, price: 200000, discount: 220800 },
+    { name: "Business Builder", count: 15, price: 840000, discount: 1104000 },
+    { name: "Business Owner", count: 30, price: 1672000, discount: 2208000 },
+  ];
+
+  const packages = currency === "USD" ? dollarPricing : nairaPricing;
+  const currencyLabel = currency === "USD" ? "USD" : "NGN";
+  const formatMoneyNumber = (amount: number) =>
+    new Intl.NumberFormat(currency === "USD" ? "en-US" : "en-NG", {
+      maximumFractionDigits: 0,
+    }).format(amount);
+
+  const packageThemes = [
+    {
+      header: "bg-primary",
+      button: "bg-primary text-white hover:brightness-110",
+    },
+    {
+      header: "bg-primary-deep",
+      button: "bg-primary-deep text-white hover:brightness-110",
+    },
+  ];
+
+  const handleViewMoreIngredients = () => {
+    setVisibleIngredients((prev) => Math.min(prev + 3, ingredients.length));
+  };
 
   const manageProductQuantity = (type = "add") => {
     if (type === "add") {
@@ -272,18 +323,20 @@ const Home: React.FC = () => {
             </p>
           </div>
           <div className="border border-neutral-soft/20 rounded-2xl bg-white shadow flex flex-col gap-3 px-5 py-3 w-full lg:w-[55%] sm:w-1/2">
-            <div
-              className="flex flex-col gap-1 cursor-pointer"
-              onClick={() => setShowUSD((prev) => !prev)}
-            >
-              <h3 className="text-xl font-semibold text-primary">
-                {showUSD
-                  ? `$${convertNairaToDollar(product.price * productCount)}`
-                  : `₦${(product.price * productCount).toLocaleString()}`}
-              </h3>
-              <p className="text-xs font-medium text-neutral-soft">
-                Free express shipping for orders over &#8358;1,000,000
-              </p>
+            {" "}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-xl font-semibold text-primary">
+                  {formatPayAmountFromNaira(
+                    product.price * productCount,
+                    currency,
+                  )}
+                </h3>
+                <p className="text-xs font-medium text-neutral-soft">
+                  Get discount on over 15 items.{" "}
+                </p>
+              </div>
+              <CurrencyToggle currency={currency} onChange={setCurrency} />
             </div>
             <div className="flex items-center gap-4 w-full lg:justify-between">
               <div className="bg-neutral-soft/10 border border-neutral-soft/10 rounded-full flex items-center gap-3 px-3 py-2 lg:w-[35%]  justify-between">
@@ -315,6 +368,136 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      <section className="flex flex-col gap-6 lg:gap-12">
+        <div className="w-full flex items-center gap-2">
+          <div className="w-1 h-6 bg-primary rounded-t-xl rounded-b-xl"></div>
+          <h2 className="text-xl lg:text-2xl text-neutral-dark font-semibold">
+            Choose Your Package
+          </h2>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <p className="text-sm leading-7 text-neutral-soft max-w-2xl">
+            Select a starting level and begin your journey with a package that
+            fits your goals.
+          </p>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setCurrency("NGN")}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
+                currency === "NGN"
+                  ? "bg-primary text-white"
+                  : "bg-secondary-dark/10 text-neutral-dark"
+              }`}
+            >
+              Nigeria
+            </button>
+
+            <button
+              onClick={() => setCurrency("USD")}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
+                currency === "USD"
+                  ? "bg-primary text-white"
+                  : "bg-secondary-dark/10 text-neutral-dark"
+              }`}
+            >
+              USA
+            </button>
+          </div>
+        </div>
+
+        <div className="relative w-full">
+          <button
+            onClick={() => {
+              packageScrollRef.current?.scrollBy({
+                left: -320,
+                behavior: "smooth",
+              });
+            }}
+            className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white border border-primary text-primary shadow flex items-center justify-center hover:bg-primary hover:text-white transition lg:hidden"
+            aria-label="Scroll packages left"
+          >
+            <HiChevronLeft />
+          </button>
+
+          <div
+            ref={packageScrollRef}
+            className="flex gap-4 overflow-x-auto no-scrollbar scroll-smooth py-4 styled-scrollbar"
+          >
+            {packages.map((pkg, index) => {
+              const payPrice = pkg.discount
+                ? getAltPrice(pkg.discount)
+                : pkg.price;
+
+              const theme =
+                packageThemes[Math.floor(index / 2) % packageThemes.length];
+
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    sessionStorage.setItem("productCount", String(pkg.count));
+                    navigate("/purchase-product");
+                  }}
+                  className="min-w-60 sm:min-w-64 cursor-pointer group rounded-2xl overflow-hidden border border-secondary-dark/70 bg-white shadow-sm transition hover:shadow-md hover:-translate-y-1"
+                >
+                  <div className={`${theme.header} px-5 py-4`}>
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="text-lg font-semibold text-white group-hover:underline">
+                        {pkg.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="px-5 py-5 flex flex-col">
+                    <p className="text-sm text-neutral-soft">
+                      {pkg.count} {pkg.count === 1 ? "Pack" : "Packs"}
+                    </p>
+
+                    <div className="mt-3 flex flex-col gap-1">
+                      <span className="h-5 text-sm text-neutral-soft line-through">
+                        {pkg.discount
+                          ? `${formatMoneyNumber(pkg.discount)} ${currencyLabel}`
+                          : "\u00A0"}
+                      </span>
+
+                      <div className="flex items-end gap-2">
+                        <span className="text-xl font-bold text-neutral-dark leading-none">
+                          {formatMoneyNumber(payPrice)}
+                        </span>
+                        <span className="pb-0.5 text-xs tracking-widest text-neutral-soft">
+                          {currencyLabel}
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className={`mt-5 w-fit rounded-full px-6 py-2.5 text-sm font-semibold transition ${theme.button}`}
+                    >
+                      Get Started
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <button
+            onClick={() => {
+              packageScrollRef.current?.scrollBy({
+                left: 320,
+                behavior: "smooth",
+              });
+            }}
+            className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 h-10 w-10 rounded-full bg-white border border-primary text-primary shadow flex items-center justify-center hover:bg-primary hover:text-white transition lg:hidden"
+            aria-label="Scroll packages right"
+          >
+            <HiChevronRight />
+          </button>
         </div>
       </section>
       <section className="flex flex-col gap-6 lg:gap-12">
@@ -361,15 +544,29 @@ const Home: React.FC = () => {
           </h2>
         </div>
         <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-3">
-          {ingredients.map((ingredient, index) => (
+          {(isMobile
+            ? ingredients.slice(0, visibleIngredients)
+            : ingredients
+          ).map((ingredient, index) => (
             <IngredientCard
               key={index}
               title={ingredient.title}
               image={ingredient.image}
               description={ingredient.description}
+              onClick={() => setIngredientModal(ingredient)}
             />
           ))}
         </div>
+        {isMobile && visibleIngredients < ingredients.length && (
+          <div className="flex justify-end">
+            <button
+              onClick={handleViewMoreIngredients}
+              className="flex justify-end  text-primary font-semibold transition duration-300 underline"
+            >
+              View More
+            </button>
+          </div>
+        )}
       </section>
       <section className="flex flex-col gap-6 lg:gap-12">
         <div className="w-full flex items-center gap-2">
@@ -424,6 +621,11 @@ const Home: React.FC = () => {
           ))}
         </div>
       </section>
+      <IngredientModal
+        ingredient={ingredientModal}
+        isOpen={Boolean(ingredientModal)}
+        onClose={() => setIngredientModal(null)}
+      />
     </div>
   );
 };

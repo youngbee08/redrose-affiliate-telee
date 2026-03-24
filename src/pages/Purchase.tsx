@@ -4,20 +4,14 @@ import { HiOutlineClipboardCopy } from "react-icons/hi";
 import product from "../lib/productDetails";
 import type { PendingOrder } from "../lib/interfaces";
 import { useNavigate } from "react-router-dom";
+import CurrencyToggle from "../components/ui/CurrencyToggle";
+import {
+  formatPayAmountFromNaira,
+  getAltPrice,
+  useCurrencyPreference,
+} from "../utilities/formatterUtility";
 
 const WHATSAPP_NUMBER = "2348167949381";
-
-const BANK_DETAILS = {
-  bankName: "UBA",
-  accountName: "AFFLUENCE GLOBAL NUTRITION AND WELLNESS LTD",
-  accountNumber: "1026783434",
-  branch: "POWA PLAZA, ABUJA",
-};
-
-const naira = (n: number) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(
-    n,
-  );
 
 const makeOrderId = () => `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
 
@@ -37,8 +31,28 @@ const PurchasePage: React.FC = () => {
   const [address, setAddress] = useState("");
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
   const [orderId, setOrderId] = useState<string>("");
+  const { currency, setCurrency } = useCurrencyPreference();
 
-  const amount = useMemo(() => unitPrice * qty, [unitPrice, qty]);
+  const grossNairaAmount = useMemo(() => unitPrice * qty, [unitPrice, qty]);
+  const nairaAmountToPay = useMemo(
+    () => getAltPrice(grossNairaAmount),
+    [grossNairaAmount],
+  );
+
+  const BANK_DETAILS =
+    currency === "NGN"
+      ? {
+          bankName: "UBA",
+          accountName: "AFFLUENCE GLOBAL NUTRITION AND WELLNESS LTD",
+          accountNumber: "1026783434",
+          branch: "POWA PLAZA, ABUJA",
+        }
+      : {
+          bankName: "ZELLE",
+          accountName: "AFFLUENCE GLOBAL USA",
+          accountNumber: "affluenceglobalusa@gmail.com",
+          branch: "114 Kirk Rd Wilmington Delaware 19807",
+        };
 
   useEffect(() => {
     sessionStorage.setItem("productCount", String(qty));
@@ -71,7 +85,7 @@ const PurchasePage: React.FC = () => {
       `Order ID: ${data.orderId}\n` +
       `Product: ${data.productName}\n` +
       `Quantity: ${data.qty}\n` +
-      `Amount: ${naira(data.amount)}\n` +
+      `Amount: ${formatPayAmountFromNaira(data.unitPrice * data.qty, currency)}\n` +
       `Name: ${data.fullName}\n` +
       `Address: ${data.address}\n` +
       `Date: ${dateText}\n\n` +
@@ -88,7 +102,7 @@ const PurchasePage: React.FC = () => {
       productName,
       unitPrice,
       qty,
-      amount,
+      amount: nairaAmountToPay,
       fullName,
       address,
       dateISO: new Date().toISOString(),
@@ -134,11 +148,18 @@ const PurchasePage: React.FC = () => {
           </h1>
 
           <div className="mt-5 rounded-2xl border border-secondary-dark/70 bg-secondary/30 p-4">
-            <p className="text-sm font-bold text-tetiary">{productName}</p>
-            <p className="mt-1 text-xs text-neutral-soft">
-              Unit Price:{" "}
-              <span className="font-semibold">{naira(unitPrice)}</span>
-            </p>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-bold text-tetiary">{productName}</p>
+                <p className="mt-1 text-xs text-neutral-soft">
+                  Unit Price:{" "}
+                  <span className="font-semibold">
+                    {formatPayAmountFromNaira(unitPrice, currency)}
+                  </span>
+                </p>
+              </div>
+              <CurrencyToggle currency={currency} onChange={setCurrency} />
+            </div>
           </div>
 
           <div className="mt-6">
@@ -209,9 +230,6 @@ const PurchasePage: React.FC = () => {
               <p className="text-sm font-bold text-tetiary">
                 Bank Transfer Details
               </p>
-              <span className="text-[10px] font-bold tracking-widest uppercase text-primary bg-white border border-primary/30 px-3 py-1 rounded-full">
-                Verified
-              </span>
             </div>
 
             <div className="mt-4 rounded-xl border border-primary/40 bg-white p-4">
@@ -247,7 +265,7 @@ const PurchasePage: React.FC = () => {
               <div className="mt-4 flex items-end justify-between gap-3 rounded-xl border border-secondary-dark/70 bg-secondary/20 p-4">
                 <div>
                   <p className="text-[11px] font-bold tracking-widest uppercase text-neutral-soft">
-                    Account number
+                    {currency === "NGN" ? "Account number" : "Zelle Email"}
                   </p>
                   <p className="mt-1 text-lg font-extrabold text-tetiary tracking-wide">
                     {BANK_DETAILS.accountNumber}
@@ -274,7 +292,7 @@ const PurchasePage: React.FC = () => {
               Total Amount to Pay
             </p>
             <p className="font-display text-xl font-extrabold text-primary">
-              {naira(amount)}
+              {formatPayAmountFromNaira(grossNairaAmount, currency)}
             </p>
           </div>
           <div className="mt-5">

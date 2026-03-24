@@ -4,36 +4,39 @@ import { FaWhatsapp } from "react-icons/fa";
 import { HiOutlineArrowLeft } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import type { PendingOrder } from "../lib/interfaces";
+import CurrencyToggle from "../components/ui/CurrencyToggle";
+import {
+  formatPayAmountFromNaira,
+  useCurrencyPreference,
+} from "../utilities/formatterUtility";
 
 const WHATSAPP_NUMBER = "2348167949381";
-
-const naira = (n: number) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(
-    n,
-  );
 
 const PaymentStatus: React.FC = () => {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement | null>(null);
 
-  const [order, setOrder] = useState<PendingOrder | null>(null);
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
-
-  useEffect(() => {
+  const [order, setOrder] = useState<PendingOrder | null>(() => {
     const raw = sessionStorage.getItem("pendingOrder");
     if (!raw) {
-      navigate("/purchase-product");
-      return;
+      return null;
     }
+
     try {
-      const parsed: PendingOrder = JSON.parse(raw);
-      setOrder(parsed);
+      return JSON.parse(raw) as PendingOrder;
     } catch {
       sessionStorage.removeItem("pendingOrder");
+      return null;
+    }
+  });
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
+  const { currency, setCurrency } = useCurrencyPreference();
+
+  useEffect(() => {
+    if (!order) {
       navigate("/purchase-product");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate]);
+  }, [navigate, order]);
 
   const statusUI = useMemo(() => {
     if (!order) return { title: "Loading...", hint: "" };
@@ -62,7 +65,7 @@ const PaymentStatus: React.FC = () => {
       `Order ID: ${order.orderId}\n` +
       `Product: ${order.productName}\n` +
       `Quantity: ${order.qty}\n` +
-      `Amount: ${naira(order.amount)}\n` +
+      `Amount: ${formatPayAmountFromNaira(order.unitPrice * order.qty, currency)}\n` +
       `Name: ${order.fullName}\n` +
       `Address: ${order.address}\n` +
       `Date: ${dateText}\n\n` +
@@ -119,6 +122,9 @@ const PaymentStatus: React.FC = () => {
             </span>
           </div>
           <div className="mt-5 flex flex-col items-center text-center">
+            <div className="w-full flex justify-end">
+              <CurrencyToggle currency={currency} onChange={setCurrency} />
+            </div>
             <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
               <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-extrabold">
                 ✓
@@ -154,7 +160,7 @@ const PaymentStatus: React.FC = () => {
               <div className="flex items-center justify-between gap-3">
                 <span className="text-neutral-soft">Amount</span>
                 <span className="font-bold text-tetiary">
-                  {naira(order.amount)}
+                  {formatPayAmountFromNaira(order.unitPrice * order.qty, currency)}
                 </span>
               </div>
 

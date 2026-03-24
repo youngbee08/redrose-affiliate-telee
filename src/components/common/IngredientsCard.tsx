@@ -1,13 +1,27 @@
 import React from "react";
 import type { IngredientCardProps } from "../../lib/interfaces";
 
-const IngredientCard: React.FC<IngredientCardProps> = ({
+type IngredientCardComponentProps = IngredientCardProps & {
+  onClick?: () => void;
+};
+
+const IngredientCard: React.FC<IngredientCardComponentProps> = ({
   title,
   description,
   image,
+  onClick,
 }) => {
+  const Root: React.ElementType = onClick ? "button" : "div";
+
   return (
-    <div className="h-full rounded-2xl border border-secondary-dark/20 bg-white p-3 sm:p-5 shadow-sm transition hover:-translate-y-0.5">
+    <Root
+      type={onClick ? "button" : undefined}
+      onClick={onClick}
+      className={[
+        "h-full w-full text-left rounded-2xl border border-secondary-dark/20 bg-white p-3 sm:p-5 shadow-sm transition hover:-translate-y-0.5",
+        onClick ? "cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/40" : "",
+      ].join(" ")}
+    >
       <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
         <div className="relative shrink-0 self-start">
           <span className="absolute -inset-1 rounded-full bg-primary/15 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -30,7 +44,7 @@ const IngredientCard: React.FC<IngredientCardProps> = ({
           </p>
         </div>
       </div>
-    </div>
+    </Root>
   );
 };
 
